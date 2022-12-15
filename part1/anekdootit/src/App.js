@@ -15,11 +15,11 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
   ]
 
+  const random = Math.floor(Math.random() * anecdotes.length);
   const points = [0, 0, 0, 0, 0, 0, 0]
   const copy = [...points]
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState(random)
   const [votes, setVote] = useState([...copy])
-  const randomAncedote = Math.floor(Math.random() * anecdotes.length);
 
   const handleVotes = (props) => {
     const copy = [...votes]
@@ -27,12 +27,26 @@ const App = () => {
     setVote(copy)
   }
 
+  const mostVotes = () => {
+
+  }
+  console.log('votes: ' + votes)
+  console.log('highest number from list: ' + Math.max.apply(Math, votes))
+  const highest = Math.max.apply(Math, votes)
+  console.log('sijainti: ' + votes.indexOf(highest))
+  const placement = votes.indexOf(highest)
+  console.log()
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {votes[selected]} votes </p>
       <Button handleClick={() => handleVotes(selected)} text='Vote' />
-      <Button handleClick={() => setSelected(randomAncedote)} text='Next Anecdote' />
+      <Button handleClick={() => setSelected(random)} text='Next Anecdote' />
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[placement]} </p>
+      <p>has {votes[placement]} votes</p>
     </div>
   )
 }
