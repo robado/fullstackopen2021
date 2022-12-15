@@ -1,8 +1,21 @@
 import { useState } from 'react'
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>{props.text}</button>
+const Button = ({handleClick, text}) => (
+  <button onClick={handleClick}>{text}</button>
 )
+
+const MostVotes = ({anecdotes, votes}) => {
+  const highest = Math.max.apply(Math, votes)
+  const placement = votes.indexOf(highest)
+
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[placement]}</p>
+      <p>has {votes[placement]} votes</p>
+    </div>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -27,16 +40,6 @@ const App = () => {
     setVote(copy)
   }
 
-  const mostVotes = () => {
-
-  }
-  console.log('votes: ' + votes)
-  console.log('highest number from list: ' + Math.max.apply(Math, votes))
-  const highest = Math.max.apply(Math, votes)
-  console.log('sijainti: ' + votes.indexOf(highest))
-  const placement = votes.indexOf(highest)
-  console.log()
-
   return (
     <div>
       <h1>Anecdote of the day</h1>
@@ -44,9 +47,7 @@ const App = () => {
       <p>has {votes[selected]} votes </p>
       <Button handleClick={() => handleVotes(selected)} text='Vote' />
       <Button handleClick={() => setSelected(random)} text='Next Anecdote' />
-      <h1>Anecdote with most votes</h1>
-      <p>{anecdotes[placement]} </p>
-      <p>has {votes[placement]} votes</p>
+      <MostVotes anecdotes={anecdotes} votes={votes} />
     </div>
   )
 }
