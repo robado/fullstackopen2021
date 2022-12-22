@@ -8,16 +8,16 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [searchCountry, setSearchCountry] = useState('');
   const [filteredCountries, setFilteredCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const [toArray, setToArray] = useState([])
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [toArray, setToArray] = useState([]);
 
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')
       .then(response => {
-        //console.log(response.data)
         setCountries(response.data)
         setFilteredCountries(response.data)
+        setToArray(response.data)
       })
       .catch(error => {
         console.error(error)
@@ -30,14 +30,8 @@ function App() {
   }
 
   const onShowCountryDetails = (country) => {
-    console.log('Clicked and the country...', country)
-    setSelectedCountry(country);
-    console.log('selectedCountry...', selectedCountry)
-    convertToArray(country)
-  }
-
-  const convertToArray = (clickedCountry) => {
-    setToArray([...toArray, clickedCountry])
+    setSelectedCountry(country); 
+    setToArray(filteredCountries.filter(i => i.name.common.toLowerCase().includes(country.name.common.toLowerCase())));
   }
 
   //console.log('countries....', filteredCountries.map(kau => kau))
