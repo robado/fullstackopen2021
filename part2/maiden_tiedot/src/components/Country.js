@@ -1,4 +1,5 @@
 import React from 'react';
+import Weather from './Weather';
 
 function Country({ filteredCountries }) {
     return (
@@ -18,6 +19,7 @@ function Country({ filteredCountries }) {
             <br />
             <br />
             <img src={Object.values(filteredCountries[0].flags)[0]}></img>
+            <Weather country={filteredCountries[0]}/>
         </div>
     );
 }
