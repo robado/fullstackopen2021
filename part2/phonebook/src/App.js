@@ -48,6 +48,17 @@ const App = () => {
 
   const filterPersons = filter ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons;
 
+  const removePerson = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService
+      .deletePerson(person.id)
+      personService
+      .getAll().then(persons => {
+        setPersons(persons)
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -61,7 +72,7 @@ const App = () => {
         onNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons filterPersons={filterPersons} />
+      <Persons filterPersons={filterPersons} removePerson={removePerson} />
     </div>
   )
 }
