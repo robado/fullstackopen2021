@@ -10,22 +10,33 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
-  const Notification = ({ message }) => {
-    if (message === null) {
+  const Notification = (props) => {
+    if (props === null) {
       return null
     }
 
     setTimeout(() => {
       setMessage(null)
+      setErrorMsg(null)
     }, 5000)
 
-    return (
-      <div className='message'>
-        {message}
-      </div>
-    )
+    if (props.errorMsg) {
+      return (
+        <div className='errorMsg'>
+          {props.errorMsg}
+        </div>
+      )
+    }
+    if (props.message) {
+      return (
+        <div className='message'>
+          {props.message}
+        </div>
+      )
+    }
   }
 
   useEffect(() => {
@@ -81,6 +92,10 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .deletePerson(person.id)
+        .catch(error => {
+          setErrorMsg(`Information of ${person.name} has already been removed from server`)
+          console.log(error)
+        })
       personService
         .getAll().then(persons => {
           setPersons(persons)
@@ -91,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} errorMsg={errorMsg}/>
       <Filter filter={filter} onChange={handleFilterChange} />
       <h2>Add A new</h2>
       <PersonForm
