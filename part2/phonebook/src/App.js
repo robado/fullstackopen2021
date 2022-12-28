@@ -59,7 +59,7 @@ const App = () => {
             setPersons(persons)
             setNewName('')
             setNewNumber('')
-            setMessage(`Phonenumber changed for person: ${newName}`)
+            setMessage(`Phonenumber changed for person ${newName}`)
           })
       }
     }
