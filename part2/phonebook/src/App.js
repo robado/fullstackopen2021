@@ -3,20 +3,37 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import personService from './services/persons' 
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState("")
-  const [newNumber, setNewNumber] = useState("")
-  const [filter, setFilter] = useState("")
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState('')
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+
+    return (
+      <div className='message'>
+        {message}
+      </div>
+    )
+  }
 
   useEffect(() => {
     personService
-    .getAll()
-    .then(initialPersons => {
-      setPersons(initialPersons)
-    })
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
   }, [])
 
   const handlePersonChange = (event) => setNewName(event.target.value)
@@ -25,7 +42,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    
+
     const personObject = {
       name: newName,
       number: newNumber
@@ -36,23 +53,25 @@ const App = () => {
       // alert(`${newName} is already added to phonebook`)
       if (window.confirm(`${existingItem.name} is already added to the phonebook, replace the old number with a new one?`)) {
         personService
-        .update(existingItem.id, personObject)
+          .update(existingItem.id, personObject)
         personService
-        .getAll().then(persons => {
-          setPersons(persons)
-          setNewName('')
-          setNewNumber('')
-        })
+          .getAll().then(persons => {
+            setPersons(persons)
+            setNewName('')
+            setNewNumber('')
+            setMessage(`Phonenumber changed for person: ${newName}`)
+          })
       }
     }
     else {
       personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-      })
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setMessage(`Person ${newName} added to the list`)
+        })
     }
   }
 
@@ -61,17 +80,18 @@ const App = () => {
   const removePerson = (person) => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
-      .deletePerson(person.id)
+        .deletePerson(person.id)
       personService
-      .getAll().then(persons => {
-        setPersons(persons)
-      })
+        .getAll().then(persons => {
+          setPersons(persons)
+        })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} onChange={handleFilterChange} />
       <h2>Add A new</h2>
       <PersonForm
